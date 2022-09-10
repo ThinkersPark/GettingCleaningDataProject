@@ -64,7 +64,6 @@ dataextract$activityid <- sapply(dataextract$activityid,getactivityname)
 
 ## 4. Appropriately labels the data set with descriptive variable names.
 
-
 ## Feature names are used as variable names,
 ## "activityid" variable name is replaced with "activityname",
 ## "subjectid" variable name remains unchanged.

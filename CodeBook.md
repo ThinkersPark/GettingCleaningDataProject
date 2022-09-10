@@ -8,14 +8,14 @@ I. Source data
 The script downloads/ unzips data and reads in the data components to the following tables:
 
 "trainset": Training set
-"trainnames": Training //[activity//] labels
+"trainnames": Training [activity] labels
 "trainsubjects" ID of subjects who performed the activity
 
 "testset": Test set
-"testnames": Test //[activity//] labels
+"testnames": Test [activity] labels
 "testsubjects": ID of subjects who performed the activity
 
-"activitynames": List of //[descriptive//] activity names
+"activitynames": List of [descriptive] activity names
 "features": List of feature names
 
 The script transforms tables "trainset" and "testset" to contain all necessary information,
@@ -55,10 +55,10 @@ The resulting set has activity name value where previously there was ID.
 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
 - Second, independent tidy data set: "newdataextract", is created from the earlier data extract by replacing original variables "activityname" and "subjectid", with a variable "actsub" that concatenates activity name and subject id Into a unique identifier.
-- The script again applies "split & apply" technique to the new identifier variable "actsub", with function colMeans applied for all remaining //(feature//) variables to obtain feature averages.
+- The script again applies "split & apply" technique to the new identifier variable "actsub", with function colMeans applied for all remaining (feature) variables to obtain feature averages.
 - The script performs additional formatting steps to ensure data is tidy, in particular:
   (i) Transposing rows and columns, so that activity/ subject identifiers are rows, and feature averages are columns,
-  (ii) Updating column names with a prefix "Avg" to reflect that the variables are feature averages //(not individual feature measurements//).
+  (ii) Updating column names with a prefix "Avg" to reflect that the variables are feature averages (not individual feature measurements).
 
 ========================================
 

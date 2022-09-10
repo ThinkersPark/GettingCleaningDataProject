@@ -37,12 +37,7 @@ mergedset <- merge(trainset,testset,all=TRUE,sort=FALSE)
 ## 2. Extracts only the measurements on the mean and standard deviation for each measurement. 
 
 ## Such measurements are identified as having "-mean()" or "-std()"in the feature name 
-## where feature names are specified in the second column of the "features" table
-## So for example, feature named "angle(tBodyAccJerkMean),gravityMean)"  will not be included
-## But feature names"fBodyAccJerk-mean()-X" will be included.
-## Extract is called "dataextract"
 ## The extract also includes "activityid" and "subjectid" variables
-## The variable "originalset" is dropped in the extract
 
 dataextract <- cbind(mergedset[,grep("-(mean\\(\\))|(-std\\(\\))",features[,2])],
                      activityid=mergedset$activityid,subjectid=mergedset$subjectid)

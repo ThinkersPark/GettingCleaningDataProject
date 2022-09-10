@@ -20,14 +20,8 @@ testsubjects <- read.table("./data/UCI HAR Dataset/test/subject_test.txt")
 activitynames <- read.table("./data/UCI HAR Dataset/activity_labels.txt")
 features <- read.table("./data/UCI HAR Dataset/features.txt")
 
-## Adding the following variables as last columns to both training set and test set:
-
-## - Numeric class variable "activityid" with values from the first column of
-## "trainnames" and "testnames" tables respectively 
-## - Numeric class variable "subjectid" with values from the first columns of
-## "trainsubjects" and "testsubjects" tables respectively
-## - Character class variable "originalset"with values 
-## "training" and "test" respectively
+## Combining training- and test- data sets
+## Adding Character class variable "originalset"with values "training" and "test" respectively
 
 trainset <- cbind(trainset,activityid=trainnames[,1],
                   subjectid=trainsubjects[,1],originalset=rep("train",nrow(trainset)))
@@ -56,7 +50,6 @@ dataextract <- cbind(mergedset[,grep("-(mean\\(\\))|(-std\\(\\))",features[,2])]
 ## 3.Uses descriptive activity names to name the activities in the data set
 
 ## Applies split & apply technique to the variable "activityid"
-## Function "getactivitname" looks for activity ID in "activitynames" table and returns activity name
 ## The resulting set has activity name value where previously there was id
 
 getactivityname <- function(n){i <- match(n,activitynames[,1]); activitynames[i,2]}
@@ -68,8 +61,6 @@ dataextract$activityid <- sapply(dataextract$activityid,getactivityname)
 ## "activityid" variable name is replaced with "activityname",
 ## "subjectid" variable name remains unchanged.
 
-## Including replacement of activity id variable name by activity name
-
 colnames(dataextract)<- c(features[grep("-(mean\\(\\))|(-std\\(\\))",features[,2]),2],"activityname", "subjectid")  
 
 ## 5. From the data set in step 4, creates a second, independent tidy data set 
@@ -79,22 +70,13 @@ colnames(dataextract)<- c(features[grep("-(mean\\(\\))|(-std\\(\\))",features[,2
 ## By replacing original variables "activityname" and "subjectid", 
 ## With a variable "actsub" that concatenates activity name and subject id
 ## Into a unique identifier.
-## The script again applies "split & apply" technique to the new identifier variable "actsub" 
-## With function colMeans applied for all remaining //(feature//) variables
-## To obtain feature averages.
 
 newdataextract <-cbind(dataextract[,-which(names(dataextract) %in% c("activityname","subjectid"))],
                      actsub=paste(dataextract$activityname, "SUBJECTID", as.character(dataextract$subjectid)))
 splitactsub <- split(newdataextract[,-which(names(newdataextract)=="actsub")],newdataextract$actsub)
 newdataextract <- sapply(splitactsub,colMeans,na.rm=TRUE)
 
-## Making "newdataextract" a tidy data set by:
-## - Coercing it to a data frame
-## - Transposing rows and columns, so that activity/ subject identifiers are rows, 
-##   and feature averages are columns
-## - Updating column names with a prefix "Avg" to reflect that the variables are feature averages 
-##  (not individual feature measurements)
-## - Ordering the data set by row names.
+## Making "newdataextract" a tidy data set
 
 newdataextract <- as.data.frame(newdataextract)
 newdataextract <- t(newdataextract)

@@ -101,6 +101,6 @@ newdataextract <- t(newdataextract)
 colnames(newdataextract) <- paste("Avg",colnames(newdataextract))
 newdataextract <- newdataextract[order(rownames(newdataextract)),]
 
-## Exporting "newdataextract" to a csv file named "NewTidyDataSet.csv"
+## Exporting "newdataextract" to a text file named "NewTidyDataSet.txt"
   
-write.csv(newdataextract,"./NewTidyDataSet.csv",row.names=TRUE)
+write.table(newdataextract,"./NewTidyDataSet.txt",row.names=FALSE)

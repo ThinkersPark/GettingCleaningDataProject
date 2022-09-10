@@ -28,7 +28,7 @@ The "GettingCleaningDataProject" repo includes the following files:
 - "README.md",
 - "CodeBook.md": Code book that describes the variables, the data, and the transformations involved in the analysis,
 - "run_analysis.R": Script performing the analysis,
-- "NewTidyDataSet.csv": Output file containing a tidy dataset as per Project Assignment instructions.
+- "NewTidyDataSet.txt": Output file containing a tidy dataset as per Project Assignment instructions.
 
 ========================================
 

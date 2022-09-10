@@ -64,4 +64,4 @@ The resulting set has activity name value where previously there was ID.
 
 III. Output dataset
 
-The Second, independent tidy data set "newdataextract" is exported to csv file "NewTidyDataSet.csv".
+The Second, independent tidy data set "newdataextract" is exported to txt file "NewTidyDataSet.txt".

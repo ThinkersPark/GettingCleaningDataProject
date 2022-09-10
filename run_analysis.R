@@ -104,3 +104,7 @@ newdataextract <- newdataextract[order(rownames(newdataextract)),]
 ## Exporting "newdataextract" to a text file named "NewTidyDataSet.txt"
   
 write.table(newdataextract,"./NewTidyDataSet.txt",row.names=FALSE)
+
+## And to a csv file named "NewTidyDataSet.csv"
+
+write.csv(newdataextract,"./NewTidyDataSet.csv",row.names=TRUE)

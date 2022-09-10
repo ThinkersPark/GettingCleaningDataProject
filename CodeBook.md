@@ -7,23 +7,23 @@ I. Source data
 
 The script downloads/ unzips data and reads in the data components to the following tables:
 
-"trainset": Training set
-"trainnames": Training [activity] labels
-"trainsubjects" ID of subjects who performed the activity
+- "trainset": Training set
+- "trainnames": Training [activity] labels
+- "trainsubjects" ID of subjects who performed the activity
 
-"testset": Test set
-"testnames": Test [activity] labels
-"testsubjects": ID of subjects who performed the activity
+- "testset": Test set
+- "testnames": Test [activity] labels
+- "testsubjects": ID of subjects who performed the activity
 
-"activitynames": List of [descriptive] activity names
-"features": List of feature names
+-"activitynames": List of [descriptive] activity names
+- "features": List of feature names
 
 The script transforms tables "trainset" and "testset" to contain all necessary information,
-by adding the following variables as last columns to both "trainingset" and "testset":
 
-- Numeric class variable "activityid" with values from the first column of "trainnames" and "testnames" tables respectively 
-- Numeric class variable "subjectid" with values from the first columns of "trainsubjects" and "testsubjects" tables respectively
-- Character class variable "originalset" with values "training" and "test" respectively, as indicator of the original set
+- Feature measurements, with numeric values, normalised and bounded within [-1,1]
+- Numeric class variable "activityid" with values 1-6
+- Numeric class variable "subjectid" with values 1-30
+- Character class variable "originalset" with values "training" and "test", as indicator of the original set
 
 ========================================
 
@@ -31,7 +31,7 @@ II. Analysis
 
 The script follows the analysis steps as per Project Assignment instructions:
 
-1. Merges the training and the test sets to create one data set, called "mergedset".
+1. Merges the training and the test sets to create one data set: "mergedset".
 
 2. Extracts only the measurements on the mean and standard deviation for each measurement, to "dataextract".
 
@@ -43,7 +43,6 @@ Note:
 3. Uses descriptive activity names to name the activities in the data set
 
 The script applies "split & apply" technique to the variable "activityid".
-Function "getactivitname" looks for activity ID in "activitynames" table, and returns the activity name.
 The resulting set has activity name value where previously there was ID.
 
 4. Appropriately labels the data set with descriptive variable names.

@@ -15,7 +15,7 @@ The script downloads/ unzips data and reads in the data components to the follow
 - "testnames": Test [activity] labels
 - "testsubjects": ID of subjects who performed the activity
 
--"activitynames": List of [descriptive] activity names
+- "activitynames": List of [descriptive] activity names
 - "features": List of feature names
 
 The script transforms tables "trainset" and "testset" to contain all necessary information,

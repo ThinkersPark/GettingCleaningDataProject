@@ -1,36 +1,38 @@
 
-## Downloading data and unzipping to a dedicated folder "./data/UCIHARDataset"
+## Downloading data and unzipping to a dedicated folder "./data"
 
 fileUrl = "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 temp <- tempfile()
 download.file(fileUrl,temp)
-unzip(zipfile=temp,exdir="./data/UCIHARDataset")
+unzip(zipfile=temp,exdir="./data")
 unlink(temp) 
 
-## Reading in key tables
+## Reading in data components
 
-trainset <- read.table("./data/UCIHARDataset/UCI HAR Dataset/train/X_train.txt")
-trainnames <- read.table("./data/UCIHARDataset/UCI HAR Dataset/train/y_train.txt")
-trainsubjects <- read.table("./data/UCIHARDataset/UCI HAR Dataset/train/subject_train.txt")
+trainset <- read.table("./data/UCI HAR Dataset/train/X_train.txt")
+trainnames <- read.table("./data/UCI HAR Dataset/train/y_train.txt")
+trainsubjects <- read.table("./data/UCI HAR Dataset/train/subject_train.txt")
 
-testset <- read.table("./data/UCIHARDataset/UCI HAR Dataset/test/X_test.txt")
-testnames <- read.table("./data/UCIHARDataset/UCI HAR Dataset/test/y_test.txt")
-testsubjects <- read.table("./data/UCIHARDataset/UCI HAR Dataset/test/subject_test.txt")
+testset <- read.table("./data/UCI HAR Dataset/test/X_test.txt")
+testnames <- read.table("./data/UCI HAR Dataset/test/y_test.txt")
+testsubjects <- read.table("./data/UCI HAR Dataset/test/subject_test.txt")
 
-activitynames <- read.table("./data/UCIHARDataset/UCI HAR Dataset/activity_labels.txt")
-features <- read.table("./data/UCIHARDataset/UCI HAR Dataset/features.txt")
+activitynames <- read.table("./data/UCI HAR Dataset/activity_labels.txt")
+features <- read.table("./data/UCI HAR Dataset/features.txt")
 
 ## Adding the following variables as last columns to both training set and test set:
 
-## 1. Numeric class variable "activityid" with values from the first column of
-## trainnames and testnames tables respectively 
-## 2. Numeric class variable "subjectid" with values from the first columns of
-## trainsubjects and testsubjects tables respectively
-## 3. Character class variable "originalset"with values 
+## - Numeric class variable "activityid" with values from the first column of
+## "trainnames" and "testnames" tables respectively 
+## - Numeric class variable "subjectid" with values from the first columns of
+## "trainsubjects" and "testsubjects" tables respectively
+## - Character class variable "originalset"with values 
 ## "training" and "test" respectively
 
-trainset <- cbind(trainset,activityid=trainnames[,1],subjectid=trainsubjects[,1],originalset=rep("train",nrow(trainset)))
-testset <- cbind(testset,activityid=testnames[,1],subjectid=testsubjects[,1],originalset=rep("test",nrow(testset)))
+trainset <- cbind(trainset,activityid=trainnames[,1],
+                  subjectid=trainsubjects[,1],originalset=rep("train",nrow(trainset)))
+testset <- cbind(testset,activityid=testnames[,1],
+                 subjectid=testsubjects[,1],originalset=rep("test",nrow(testset)))
 
 ## Further on the script does the following:
 
@@ -41,11 +43,12 @@ mergedset <- merge(trainset,testset,all=TRUE,sort=FALSE)
 ## 2. Extracts only the measurements on the mean and standard deviation for each measurement. 
 
 ## Such measurements are identified as having "-mean()" or "-std()"in the feature name 
-## where feature names are specified in the second columns of features table
+## where feature names are specified in the second column of the "features" table
 ## So for example, feature named "angle(tBodyAccJerkMean),gravityMean)"  will not be included
 ## But feature names"fBodyAccJerk-mean()-X" will be included.
-## Extract is called "dataextract
-## The variable denoting originalset is dropped in the extract
+## Extract is called "dataextract"
+## The extract also includes "activityid" and "subjectid" variables
+## The variable "originalset" is dropped in the extract
 
 dataextract <- cbind(mergedset[,grep("-(mean\\(\\))|(-std\\(\\))",features[,2])],
                      activityid=mergedset$activityid,subjectid=mergedset$subjectid)
@@ -53,28 +56,52 @@ dataextract <- cbind(mergedset[,grep("-(mean\\(\\))|(-std\\(\\))",features[,2])]
 ## 3.Uses descriptive activity names to name the activities in the data set
 
 ## Applies split & apply technique to the variable "activityid"
-## Function getactivitname looks for activity ID in activitynames table
-## And returns activity name instead
+## Function "getactivitname" looks for activity ID in "activitynames" table and returns activity name
+## The resulting set has activity name value where previously there was id
 
 getactivityname <- function(n){i <- match(n,activitynames[,1]); activitynames[i,2]}
 dataextract$activityid <- sapply(dataextract$activityid,getactivityname)
 
-## 4. Appropriately labels the data set with descriptive variable names. 
+## 4. Appropriately labels the data set with descriptive variable names.
+
+
+## Feature names are used as variable names,
+## "activityid" variable name is replaced with "activityname",
+## "subjectid" variable name remains unchanged.
+
+## Including replacement of activity id variable name by activity name
 
 colnames(dataextract)<- c(features[grep("-(mean\\(\\))|(-std\\(\\))",features[,2]),2],"activityname", "subjectid")  
 
 ## 5. From the data set in step 4, creates a second, independent tidy data set 
 ## with the average of each variable for each activity and each subject
 
-## Dataextract2 is initially created from the earlier data extract
-## By removing orignal columns activity names and subject id, 
-## And adding a column that concatenates activity name and subject id
-## Into a unique identifier
-## Data is then split by the new identifier, adn colMeans function is applied
-## For all remaining columns
+## "newdataextract" is created from the earlier data extract
+## By replacing original variables "activityname" and "subjectid", 
+## With a variable "actsub" that concatenates activity name and subject id
+## Into a unique identifier.
+## The script again applies "split & apply" technique to the new identifier variable "actsub" 
+## With function colMeans applied for all remaining //(feature//) variables
+## To obtain feature averages.
 
-dataextract2 <-cbind(dataextract[,-which(names(dataextract) %in% c("activityname","subjectid"))],
-                     actsub=paste(dataextract$activityname, as.character(dataextract$subjectid)))
-splitactsub <- split(dataextract2[,-which(names(dataextract2)=="actsub")],dataextract2$actsub)
-dataextract2 <- sapply(splitactsub,colMeans,na.rm=TRUE)
+newdataextract <-cbind(dataextract[,-which(names(dataextract) %in% c("activityname","subjectid"))],
+                     actsub=paste(dataextract$activityname, "SUBJECTID", as.character(dataextract$subjectid)))
+splitactsub <- split(newdataextract[,-which(names(newdataextract)=="actsub")],newdataextract$actsub)
+newdataextract <- sapply(splitactsub,colMeans,na.rm=TRUE)
 
+## Making "newdataextract" a tidy data set by:
+## - Coercing it to a data frame
+## - Transposing rows and columns, so that activity/ subject identifiers are rows, 
+##   and feature averages are columns
+## - Updating column names with a prefix "Avg" to reflect that the variables are feature averages 
+##  (not individual feature measurements)
+## - Ordering the data set by row names.
+
+newdataextract <- as.data.frame(newdataextract)
+newdataextract <- t(newdataextract)
+colnames(newdataextract) <- paste("Avg",colnames(newdataextract))
+newdataextract <- newdataextract[order(rownames(newdataextract)),]
+
+## Exporting "newdataextract" to a csv file named "NewTidyDataSet.csv"
+  
+write.csv(newdataextract,"./NewTidyDataSet.csv",row.names=TRUE)

@@ -7,23 +7,18 @@ I. Source data
 
 The script downloads/ unzips data and reads in the data components to the following tables:
 
-- "trainset": Training set
-- "trainnames": Training [activity] labels
-- "trainsubjects" ID of subjects who performed the activity
+- "trainset": Training set,numeric values, normalised and bounded within [-1,1]
+- "trainnames": Training [activity] labels, numeric values 1-6
+- "trainsubjects" ID of subjects who performed the activity, numeric values 1-30
 
-- "testset": Test set
-- "testnames": Test [activity] labels
-- "testsubjects": ID of subjects who performed the activity
+- "testset": Test set, numeric values, normalised and bounded within [-1,1]
+- "testnames": Test [activity] labels, numeric values 1-6
+- "testsubjects": ID of subjects who performed the activity, numeric values 1-30
 
-- "activitynames": List of [descriptive] activity names
-- "features": List of feature names
+- "activitynames": List of [descriptive] activity names, 6 distinct character values 
+- "features": List of feature names, 561 distinct character values
 
-The script transforms tables "trainset" and "testset" to contain all necessary information,
-
-- Feature measurements, with numeric values, normalised and bounded within [-1,1]
-- Numeric class variable "activityid" with values 1-6
-- Numeric class variable "subjectid" with values 1-30
-- Character class variable "originalset" with values "training" and "test", as indicator of the original set
+The script adds character class variable "originalset" with values "training" and "test", as indicator of the original set.
 
 ========================================
 
